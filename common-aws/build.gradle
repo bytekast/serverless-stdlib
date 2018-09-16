@@ -1,5 +1,8 @@
 plugins {
   id 'groovy'
+  id 'maven'
+  id 'signing'
+  id 'net.researchgate.release' version '2.6.0'
 }
 
 dependencies {
@@ -20,4 +23,59 @@ dependencies {
   testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
 }
 
+signing {
+  sign configurations.archives
+}
+
+artifacts {
+  archives javadocJar, sourceJar
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'common-aws'
+        description 'Serverless Stdlib - Common AWS'
+        packaging 'jar'
+        url 'http://rowellbelen.com'
+
+        scm {
+          connection 'git@github.com:bytekast/serverless-stdlib.git'
+          developerConnection 'git@github.com:bytekast/serverless-stdlib.git'
+          url 'https://github.com/bytekast/serverless-stdlib.git'
+        }
+
+        licenses {
+          license {
+            name 'The Apache License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          }
+        }
+
+        developers {
+          developer {
+            id 'bytekast'
+            name 'Rowell Belen'
+            email 'developer@bytekast.com'
+          }
+        }
+      }
+    }
+  }
+}
+
+
 check.dependsOn jacocoTestReport
+afterReleaseBuild.finalizedBy(publish)
+afterReleaseBuild.finalizedBy(uploadArchives)
