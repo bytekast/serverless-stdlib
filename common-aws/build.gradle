@@ -81,5 +81,4 @@ uploadArchives {
 
 
 check.dependsOn jacocoTestReport
-afterReleaseBuild.finalizedBy(publish)
 afterReleaseBuild.finalizedBy(uploadArchives)
