@@ -1,0 +1,23 @@
+plugins {
+  id 'groovy'
+}
+
+dependencies {
+
+  compile(
+      'org.codehaus.groovy:groovy-all:2.5.2',
+      'com.amazonaws:aws-java-sdk-core:1.11.232',
+      'com.amazonaws:aws-java-sdk-sqs:1.11.232',
+      'com.amazonaws:aws-java-sdk-sns:1.11.232',
+      'com.amazonaws:aws-java-sdk-s3:1.11.232',
+      'com.amazonaws:aws-java-sdk-lambda:1.11.232',
+      'com.amazonaws:aws-java-sdk-stepfunctions:1.11.232',
+      'com.amazonaws:aws-java-sdk-kms:1.11.232',
+      'com.amazonaws:aws-lambda-java-core:1.1.0',
+      'com.amazonaws:aws-lambda-java-events:1.1.0'
+  )
+
+  testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+}
+
+check.dependsOn jacocoTestReport

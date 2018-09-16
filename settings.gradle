@@ -1,3 +1,4 @@
 rootProject.name = 'serverless-stdlib'
 
 include 'bootstrap'
+include 'common-aws'
