@@ -1,0 +1,24 @@
+*.iml
+*.swp
+.idea/
+*.class
+.gradle
+build/
+bin/
+out/
+.settings/
+.project
+.classpath
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Serverless directories
+.serverless/
+
+!gradle/wrapper/*
+buildSrc/build/
+deploy.sh
+node_modules/

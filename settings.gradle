@@ -1,0 +1,3 @@
+rootProject.name = 'serverless-stdlib'
+
+include 'bootstrap'

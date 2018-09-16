@@ -1,0 +1,18 @@
+
+plugins {
+  id 'groovy'
+  id "org.jetbrains.kotlin.jvm" version "1.2.40"
+}
+
+dependencies {
+
+  compile(
+      'org.jetbrains.kotlin:kotlin-stdlib-jdk8',
+      'org.jetbrains.kotlin:kotlin-reflect',
+      'org.jetbrains.kotlin:kotlin-runtime',
+  )
+
+  testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+}
+
+check.dependsOn jacocoTestReport

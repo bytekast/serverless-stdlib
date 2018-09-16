@@ -1,0 +1,83 @@
+subprojects {
+
+  apply plugin: 'maven-publish'
+  apply plugin: 'jacoco'
+  apply plugin: 'idea'
+
+  configurations.all {
+    resolutionStrategy {
+      cacheChangingModulesFor 0, 'seconds'
+    }
+  }
+
+  repositories {
+    mavenCentral()
+    jcenter()
+  }
+
+  publishing {
+    repositories {
+      maven {
+        url project.version.endsWith('-SNAPSHOT') ? "$CLOUDREPO_PUBLIC_SNAPSHOTS_URL" : "$CLOUDREPO_PUBLIC_RELEASES_URL"
+        credentials {
+          username "$CLOUDREPO_WRITE_USER"
+          password "$CLOUDREPO_WRITE_PASSWORD"
+        }
+      }
+    }
+
+    // Usage: gradlew [-Dtest.type=all|unit|integration] test
+    test {
+      switch(System.properties['test.type']){
+        case 'integration':
+          include '**/*IntegrationTest.*'
+          include '**/*IntegrationSpec.*'
+          include '**/*integration_test.clj'
+          break
+        case 'unit':
+          include '**/*Test.*'
+          include '**/*Spec.*'
+          include '**/*_test.clj'
+          exclude '**/*IntegrationTest.*'
+          exclude '**/*IntegrationSpec.*'
+          exclude '**/*integration_test.clj'
+        case 'all':
+          include '**/*Test.*'
+          include '**/*Spec.*'
+          include '**/*_test.clj'
+        default:
+          //Default to unit
+          include '**/*Test.*'
+          include '**/*Spec.*'
+          include '**/*_test.clj'
+          exclude '**/*IntegrationTest.*'
+          exclude '**/*IntegrationSpec.*'
+          exclude '**/*integration_test.clj'
+      }
+    }
+
+    // Usage: gradlew integrationTest
+    task integrationTest(type: Test, description: 'Runs the integration tests', group: 'Verification') {
+      include '**/*IntegrationTest.*'
+      include '**/*IntegrationSpec.*'
+      include '**/*integration_test.clj'
+    }
+
+    
+    task sourceJar(type: Jar) {
+      classifier = 'sources'
+      from sourceSets.main.allSource
+    }
+
+    classes.finalizedBy(sourceJar)
+    check.dependsOn jacocoTestReport
+
+    task wrapper(type: Wrapper) {
+      gradleVersion = '4.10.1'
+    }
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '4.10.1'
+}
